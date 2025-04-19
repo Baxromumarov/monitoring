@@ -69,14 +69,4 @@ Pull requests and issues are welcome! Please open an issue for bugs or suggestio
 
 ---
 
-## 📄 License
-MIT
-
----
-
-## 💡 Inspiration
-Built for developers who want instant, beautiful insight into their Go application's performance, with zero fuss.
-
----
-
 Enjoy monitoring! 🚀

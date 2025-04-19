@@ -41,7 +41,7 @@ type FuncMonitor struct {
 	monitor   *Monitor
 }
 
-func NewMonitor(addr string) *Monitor {
+func NewMonitoring(addr string) *Monitor {
 	if addr == "" {
 		// If no address is provided, start the HTTP server on a default port
 		addr = ":8080"

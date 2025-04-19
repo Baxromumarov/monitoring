@@ -20,7 +20,7 @@ import (
 
 func main() {
 	// Create a new monitor
-	monitor := monitoring.NewMonitor(":8080")
+	monitor := monitoring.NewMonitoring("")
 	defer monitor.Stop()
 
 	// Start CPU profiling

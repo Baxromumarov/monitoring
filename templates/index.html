@@ -132,8 +132,8 @@
           {{range .}}
           <tr>
             <td><a href="/function?name={{.Name}}">{{.Name}}</a></td>
-            <td>{{.Duration | durationSeconds}} s</td>
-            <td>{{.AvgDuration | formatDuration}}</td>
+            <td>{{printf "%.2f" .Duration}} s</td>
+            <td>{{printf "%.2f" .AvgDuration}} s</td>
             <td>{{.MemAlloc | formatMB}} MB</td>
             <td>{{.Invocations}}</td>
           </tr>

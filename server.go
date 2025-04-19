@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	indexTemplate = template.Must(template.New("index.html").Funcs(FuncMap).ParseFiles("templates/index.html"))
-	funcTemplate  = template.Must(template.New("function.html").Funcs(FuncMap).ParseFiles("templates/function.html"))
+	indexTemplate = template.Must(template.New("index.html").Funcs(FuncMap).ParseFiles("./templates/index.html"))
+	funcTemplate  = template.Must(template.New("function.html").Funcs(FuncMap).ParseFiles("./templates/function.html"))
 )
 
 func (m *Monitor) HandleIndex(w http.ResponseWriter, r *http.Request) {

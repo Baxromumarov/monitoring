@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function Monitor</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f7;
+        }
+        .header {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #1d1d1f;
+            margin: 0;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .metric-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .metric-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 10px;
+            text-decoration: none;
+        }
+        .metric-name a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .metric-name a:hover {
+            text-decoration: underline;
+        }
+        .metric-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .metric-stat {
+            background: #f5f5f7;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.8em;
+            display: block;
+        }
+        .stat-value {
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        .metrics-table-container {
+        margin-top: 30px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 24px 18px;
+        overflow-x: auto;
+    }
+    .metrics-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        font-size: 1em;
+        background: transparent;
+    }
+    .metrics-table th, .metrics-table td {
+        padding: 14px 22px;
+        text-align: left;
+        background: #f9f9fb;
+        border-radius: 6px;
+        min-width: 140px;
+    }
+    .metrics-table th {
+        background: #f0f4fa;
+        font-size: 1.05em;
+        color: #444;
+        font-weight: 700;
+        border-bottom: 2px solid #e3e8ee;
+    }
+    .metrics-table td a {
+        color: #0066cc;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .metrics-table td a:hover {
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+    <div class="header">
+        <h1>Function Metrics Dashboard</h1>
+    </div>
+    <div class="metrics-table-container">
+      <table class="metrics-table">
+        <thead>
+          <tr>
+            <th>Function Name</th>
+            <th>Total Duration (s)</th>
+            <th>Average Duration</th>
+            <th>Memory Allocation (MB)</th>
+            <th>Invocations</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range .}}
+          <tr>
+            <td><a href="/function?name={{.Name}}">{{.Name}}</a></td>
+            <td>{{.Duration | durationSeconds}} s</td>
+            <td>{{.AvgDuration | formatDuration}}</td>
+            <td>{{.MemAlloc | formatMB}} MB</td>
+            <td>{{.Invocations}}</td>
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+    <script src="/static/dashboard.js"></script>
+</body>
+</html>

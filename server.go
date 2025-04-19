@@ -1,14 +1,18 @@
 package monitoring
 
 import (
+	"embed"
 	"encoding/json"
 	"net/http"
 	"text/template"
 )
 
+//go:embed templates/*.html
+var templatesFS embed.FS
+
 var (
-	indexTemplate = template.Must(template.New("index.html").Funcs(FuncMap).ParseFiles("./templates/index.html"))
-	funcTemplate  = template.Must(template.New("function.html").Funcs(FuncMap).ParseFiles("./templates/function.html"))
+	indexTemplate = template.Must(template.New("index.html").Funcs(FuncMap).ParseFS(templatesFS, "templates/index.html"))
+	funcTemplate  = template.Must(template.New("function.html").Funcs(FuncMap).ParseFS(templatesFS, "templates/function.html"))
 )
 
 func (m *Monitor) HandleIndex(w http.ResponseWriter, r *http.Request) {

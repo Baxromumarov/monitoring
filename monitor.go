@@ -32,6 +32,7 @@ type Monitor struct {
 	functions  map[string]*FunctionMetrics
 	startTime  time.Time
 	cpuProfile *os.File
+	resetTimer time.Duration
 }
 
 type FuncMonitor struct {
@@ -41,16 +42,25 @@ type FuncMonitor struct {
 	monitor   *Monitor
 }
 
-func NewMonitoring(addr string) *Monitor {
+// resetTimer for metrics reset 
+// it is works in background similar to TTL 
+// default value of resetTimer is 4 hours
+func NewMonitoring(addr string, resetTimer time.Duration) *Monitor {
 	if addr == "" {
 		// If no address is provided, start the HTTP server on a default port
 		addr = ":8080"
 	}
+	if resetTimer == 0 {
+		resetTimer = 4 * time.Hour
+	}
 
 	m := &Monitor{
-		functions: make(map[string]*FunctionMetrics),
-		startTime: time.Now(),
+		functions:  make(map[string]*FunctionMetrics),
+		startTime:  time.Now(),
+		resetTimer: resetTimer,
 	}
+
+	m.startResetLoop()
 
 	go func() {
 		fmt.Println("Starting HTTP server on", addr)
@@ -103,7 +113,7 @@ func (f *FuncMonitor) Finish() {
 			Calls: []CallMetrics{
 				{
 					Timestamp: time.Now(),
-					Duration:  duration.Seconds()	,
+					Duration:  duration.Seconds(),
 					MemAlloc:  memUsed,
 				},
 			},
@@ -225,17 +235,23 @@ func (m *Monitor) Stop() {
 	m.StopCPUProfile()
 }
 
-func (m *Monitor) Reset() {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
-	m.functions = make(map[string]*FunctionMetrics)
-	m.startTime = time.Now()
-
-	if m.cpuProfile != nil {
-		m.cpuProfile.Close()
-		m.cpuProfile = nil
-	}
+func (m *Monitor) startResetLoop() {
+	go func() {
+		ticker := time.NewTicker(m.resetTimer)
+		defer ticker.Stop()
+		for {
+			<-ticker.C
+			m.mu.Lock()
+			m.functions = make(map[string]*FunctionMetrics)
+			m.startTime = time.Now()
+			if m.cpuProfile != nil {
+				m.cpuProfile.Close()
+				m.cpuProfile = nil
+			}
+			m.mu.Unlock()
+			// fmt.Println("Metrics reset at", time.Now())
+		}
+	}()
 }
 
 func (m *Monitor) GetAllFunctionMetrics() []*FunctionMetrics {

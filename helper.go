@@ -46,9 +46,3 @@ var (
 	}
 )
 
-func DoSomething(x int, y string, monitor *Monitor) (int, error) {
-	fn := monitor.RegisterFunc("DoSomething")
-	defer fn.Finish()
-	time.Sleep(time.Second * 2) // Simulate some work
-	return x, nil
-}

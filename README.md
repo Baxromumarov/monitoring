@@ -32,7 +32,7 @@ Import the monitor package and wrap your functions:
 import "github.com/baxromumarov/monitoring"
 
 func main() {
-    monitor := monitoring.NewMonitor(":8080")
+    monitor := monitoring.NewMonitor(":8080", time.Minute * 10)
     defer monitor.Stop()
 
     // Wrap your function

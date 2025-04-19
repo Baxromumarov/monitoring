@@ -5,6 +5,7 @@ import (
 	"os"
 	"runtime"
 	"runtime/pprof"
+	"sort"
 	"sync"
 	"time"
 )
@@ -42,8 +43,8 @@ type FuncMonitor struct {
 	monitor   *Monitor
 }
 
-// resetTimer for metrics reset 
-// it is works in background similar to TTL 
+// resetTimer for metrics reset
+// it is works in background similar to TTL
 // default value of resetTimer is 4 hours
 func NewMonitoring(addr string, resetTimer time.Duration) *Monitor {
 	if addr == "" {
@@ -263,6 +264,10 @@ func (m *Monitor) GetAllFunctionMetrics() []*FunctionMetrics {
 		metric.AvgDuration = metric.Duration / float64(metric.Invocations)
 		metrics = append(metrics, metric)
 	}
+	
+	sort.Slice(metrics, func(i, j int) bool {
+		return metrics[i].Name < metrics[j].Name
+	})
 	return metrics
 }
 
